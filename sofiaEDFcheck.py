@@ -32,16 +32,16 @@ def get_signal_segment(signal, sf, onset=0, duration=30):
     onset = onset * sf
     return signal[onset:(onset+duration)]
 
-def get_sample_frequency(rec1,index):
+def get_sample_frequency(file,index):
     # Gets the sampling frequency of a signal
-    header = rec1.getSignalHeader(index)
+    header = file.getSignalHeader(index)
     return header.get('sample_rate')
 
-def get_label_info(rec1,label,labels):
+def get_label_info(file,label,labels):
     # Returns sampling frequency and data of a label
     index = labels.index(label)
-    frequency = get_sample_frequency(rec1,index)
-    data = rec1.readSignal(index)
+    frequency = get_sample_frequency(file,index)
+    data = file.readSignal(index)
     return frequency, data
 
 
@@ -59,50 +59,49 @@ def add_to_dataframe(data,dataframe,stage):
 
 def write_to_csv(dataframe):
     # writing to CSV file
-    dataframe.to_csv(r'test.csv')
+    dataframe.to_csv(r'sofiaReadySVM.csv')
 
 
 # reading from recording
-rec1 = EdfReader("sleep-edf-database-expanded-1.0.0/sleep-cassette/SC4001E0-PSG.edf")
+file = EdfReader("Sofia.edf")
 
 # reading from scoring format
-staged1 = EdfReader("sleep-edf-database-expanded-1.0.0/sleep-cassette/SC4001EC-Hypnogram.edf")
+stages_df = pd.read_csv("sofiaStaged.csv")
+
+max_time = file.file_duration
+print(max_time)
+exit(0)
 
 # getting signal labels
-labels = rec1.getSignalLabels()
+labels = file.getSignalLabels()
+labels_needed = ['Abdomen Fast', 'Abdomen RIP', 'C3', 'C4', 'E1','E2', 'EDA','EKG','F', '1-F', '2-F','F3', 'F4', 'Flow Limitation', 'Heart Rate', 'Inductance Abdom', 'Inductance Thora', 'K',  'M2', 'M1M2', 'C3-M2', 'F3-M2', 'E1-M2', 'Nasal Pressure', 'O1', 'O1-M2', 'O2', 'O2-M1', 'Pleth', 'PTT', 'Pulse', 'PWA', 'Resp Rate', 'Right Leg', 'RIP Phase', 'SpO2 B-B', 'SpO2']
 
 # counter to tell which stage it is
 stage_counter = 0
 
 # annotations from the scoring, includes 2 arrays, one with duration
 # and the second with the respective stage
-staging = staged1.readAnnotations()
+staging = stages_df['Event'].tolist()
 
 # full duration of the recording
-max_time = rec1.file_duration
+max_time = file.file_duration
 
 # dictionary to hold the samples of signals of 30 seconds
 samples = {}
 
 # initialization of pandas dataframe
-dataframe = create_dataframe(labels)
+dataframe = create_dataframe(labels_needed)
 
 
 '''From the beginning of the recording until its end I iterated through the data every
 30 seconds,extracting the sample rate for each signal and the data in those 30 seconds.'''
 # iterating through the time as epochs of 30 seconds
-for i in range(0,max_time,30):
-    # if we are done with the duration of the current stage
-    if staging[0][stage_counter+1] < i:
-        # going through the stages, staging[x+1] is the time the stage ends
-        # increasing counter for the next stage if we have reached the previous' end
-        stage_counter += 1
-
+for i in range(43380,max_time,30):
+    print(i)
     # going through each signal
-    for l in labels:
-
+    for l in labels_needed:
         # extracting the sample rate (frequency) and data for the signal
-        frequency, data = get_label_info(rec1,l,labels)
+        frequency, data = get_label_info(file,l,labels)
 
         # accordingly to the sample rate and the time (30 seconds) extracting the signal segment
         temp = get_signal_segment(data, frequency, i, 30)
@@ -112,7 +111,11 @@ for i in range(0,max_time,30):
 
     # adding the sample (containing all signals of the course of 30 seconds) and the respective stage
     # to the dataframe
-    dataframe = add_to_dataframe(samples,dataframe,staging[2][stage_counter])
+    dataframe = add_to_dataframe(samples,dataframe,staging[stage_counter])
+    # going through the stages, staging[x+1] is the time the stage ends
+    # increasing counter for the next stage if we have reached the previous' end
+    print(staging[stage_counter])
+    stage_counter += 1
 
 # finilizing the collection of all samples, writing dataframe to a CSV file, to be used later by the SVM
 write_to_csv(dataframe)
