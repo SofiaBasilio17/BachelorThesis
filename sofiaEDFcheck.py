@@ -59,7 +59,7 @@ def add_to_dataframe(data,dataframe,stage):
 
 def write_to_csv(dataframe):
     # writing to CSV file
-    dataframe.to_csv(r'sofiaReadySVM.csv')
+    dataframe.to_csv(r'sofiaReadySVM2.csv')
 
 
 # reading from recording
@@ -69,8 +69,6 @@ file = EdfReader("Sofia.edf")
 stages_df = pd.read_csv("sofiaStaged.csv")
 
 max_time = file.file_duration
-print(max_time)
-exit(0)
 
 # getting signal labels
 labels = file.getSignalLabels()
@@ -96,7 +94,7 @@ dataframe = create_dataframe(labels_needed)
 '''From the beginning of the recording until its end I iterated through the data every
 30 seconds,extracting the sample rate for each signal and the data in those 30 seconds.'''
 # iterating through the time as epochs of 30 seconds
-for i in range(43380,max_time,30):
+for i in range(24673,43380,30):
     print(i)
     # going through each signal
     for l in labels_needed:
