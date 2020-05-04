@@ -94,7 +94,7 @@ dataframe = create_dataframe(labels)
 for i in range(0,max_time,30):
     # if we are done with the duration of the current stage
     if staging[0][stage_counter+1] < i:
-        # going through the stages, staging[x+1] is the time the stage ends
+        # going through the stages, staging[0][x+1] is the time the stage ends
         # increasing counter for the next stage if we have reached the previous' end
         stage_counter += 1
 

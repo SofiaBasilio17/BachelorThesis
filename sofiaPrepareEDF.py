@@ -65,10 +65,16 @@ def write_to_csv(dataframe):
 # reading from recording
 file = EdfReader("Sofia.edf")
 
-# reading from scoring format
-stages_df = pd.read_csv("sofiaStaged.csv")
+print(file.getStartdatetime())
+print(file.file_duration)
 
-max_time = file.file_duration
+exit(0)
+
+# reading from scoring format
+stages_df = pd.read_csv("CSV_Sofia/sofiaStaged.csv")
+
+
+
 
 # getting signal labels
 labels = file.getSignalLabels()
@@ -116,4 +122,3 @@ for i in range(24673,43380,30):
     stage_counter += 1
 
 # finilizing the collection of all samples, writing dataframe to a CSV file, to be used later by the SVM
-write_to_csv(dataframe)
