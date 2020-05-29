@@ -28,16 +28,10 @@ sleep_data = sleep_data.reset_index()
 
 # Filling Nan Values
 sleep_data = fill_Nan(sleep_data)
-#print(count_Null(sleep_data))
 
 
 # dropping useless index
 sleep_data = sleep_data.drop(['index'], axis=1)
-# some error was accurring with a non existing column called level_0, fixed
-#sleep_data = sleep_data.drop(['level_0'], axis=1)
-
-# check all the types
-#print(sleep_data.dtypes)
 
 
 #### divide the data into attributes and labels
@@ -53,26 +47,27 @@ svclassifier = SVC(kernel='poly',degree=6,coef0=7)
 
 #### Uncomment this block to visualize PCA
 #### Visualization block: start
-y_train = y_train.reset_index()
-y_train = y_train.drop(['index'],axis=1)
-pca = PCA(n_components=2).fit(X_train)
-pca_2d =  pca.transform(X_train)
-
-for i in range(0, pca_2d.shape[0]):
-    if y_train.values[i] == 'REM':
-        c1 = pl.scatter(pca_2d[i,0],pca_2d[i,1],c='r',marker='+')
-    elif y_train.values[i] == 'NREM':
-        c2 = pl.scatter(pca_2d[i,0],pca_2d[i,1],c='g',marker='o')
-pl.xlabel('Principal Component 1')
-pl.ylabel('Principal Component 2')
-pl.legend([c1,c2],['REM','NREM'])
-pl.title('PSG Training dataset')
-pl.show()
-exit(0)
+# y_train = y_train.reset_index()
+# y_train = y_train.drop(['index'],axis=1)
+# pca = PCA(n_components=2).fit(X_train)
+# pca_2d =  pca.transform(X_train)
+#
+# for i in range(0, pca_2d.shape[0]):
+#     if y_train.values[i] == 'REM':
+#         c1 = pl.scatter(pca_2d[i,0],pca_2d[i,1],c='r',marker='+')
+#     elif y_train.values[i] == 'NREM':
+#         c2 = pl.scatter(pca_2d[i,0],pca_2d[i,1],c='g',marker='o')
+# pl.xlabel('Principal Component 1')
+# pl.ylabel('Principal Component 2')
+# pl.legend([c1,c2],['REM','NREM'])
+# pl.title('PSG Training dataset')
+# pl.show()
 #### Visualization block: end
+
+#### training the svm
 svclassifier.fit(X_train, y_train)
 
-#### predicting
+#### predicting the svm
 y_pred = svclassifier.predict(X_test)
 
 
