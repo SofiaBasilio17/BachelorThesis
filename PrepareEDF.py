@@ -8,22 +8,6 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
 from sklearn.metrics import classification_report, confusion_matrix
-'''
-The annotations contain the duration of each stage for example Stage W duration = 1560 Seconds
-I have to split the data into 30 second epochs and get the corresponding stage for that,
-EG: the first 1560/30 epochs are of stage W
-1. Split 2 recordings from the data into 30 second Epochs
-2. Split 1 recording from the data into 30 second Epochs
-3. Train on 1
-4. Test and compare on 2 for accuracy and confusion matrix
-'''
-
-
-'''
-Make a CSV file with all the data from the samples
-Add to the dataframe the column of class with each stage equivalent to the sample
-'''
-
 
 
 def get_signal_segment(signal, sf, onset=0, duration=30):
