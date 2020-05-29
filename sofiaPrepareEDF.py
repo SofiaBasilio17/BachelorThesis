@@ -59,26 +59,25 @@ def add_to_dataframe(data,dataframe,stage):
 
 def write_to_csv(dataframe):
     # writing to CSV file
-    dataframe.to_csv(r'sofiaReadySVM2.csv')
+    dataframe.to_csv(r'pediatric1ReadySVM.csv')
+
+
 
 
 # reading from recording
-file = EdfReader("Sofia.edf")
+file = EdfReader("pediatric_edf/01523.edf")
 
-print(file.getStartdatetime())
-print(file.file_duration)
-
-exit(0)
 
 # reading from scoring format
-stages_df = pd.read_csv("CSV_Sofia/sofiaStaged.csv")
+stages_df = pd.read_csv("CSV_Sofia/ClearedStagesPediatric1.csv")
 
 
 
 
 # getting signal labels
 labels = file.getSignalLabels()
-labels_needed = ['Abdomen Fast', 'Abdomen RIP', 'C3', 'C4', 'E1','E2', 'EDA','EKG','F', '1-F', '2-F','F3', 'F4', 'Flow Limitation', 'Heart Rate', 'Inductance Abdom', 'Inductance Thora', 'K',  'M2', 'M1M2', 'C3-M2', 'F3-M2', 'E1-M2', 'Nasal Pressure', 'O1', 'O1-M2', 'O2', 'O2-M1', 'Pleth', 'PTT', 'Pulse', 'PWA', 'Resp Rate', 'Right Leg', 'RIP Phase', 'SpO2 B-B', 'SpO2']
+
+labels_needed = ['Abdomen CaL', 'Abdomen', 'Activity', 'C3', 'C3-M2', 'C4', 'C4-M1', 'cRIP Flow', 'cRIP Sum', 'E1', 'E1-M2', 'E2', 'E2-M1', 'ECG', 'Elevation', 'F', 'F3', 'F3-M2', 'F4', 'F4-M1', 'Flow', 'Flow Limitation', 'Heart Rate', 'Inductance Abdom', 'Inductance Thora', 'K', 'Left Leg', 'M1', 'M1M2', 'M2', 'Nasal Pressure', 'O1', 'O1-M2', 'O2', 'O2-M1', 'Pulse Waveform', 'PosAngle', 'PTT', 'Pulse', 'PWA', 'Resp Rate', 'Right Leg', 'RIP Flow', 'RIP Phase', 'RIP Sum', 'Snore', 'Saturation', 'SpO2 B-B', 'Chest']
 
 # counter to tell which stage it is
 stage_counter = 0
@@ -100,7 +99,7 @@ dataframe = create_dataframe(labels_needed)
 '''From the beginning of the recording until its end I iterated through the data every
 30 seconds,extracting the sample rate for each signal and the data in those 30 seconds.'''
 # iterating through the time as epochs of 30 seconds
-for i in range(24673,43380,30):
+for i in range(16501,44191,30):
     print(i)
     # going through each signal
     for l in labels_needed:
@@ -122,3 +121,4 @@ for i in range(24673,43380,30):
     stage_counter += 1
 
 # finilizing the collection of all samples, writing dataframe to a CSV file, to be used later by the SVM
+write_to_csv(dataframe)
