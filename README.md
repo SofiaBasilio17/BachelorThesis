@@ -1,7 +1,7 @@
 # Analysis of Sleep Stages with Support Vector Machine
 
 Files:
-  PrepareEDF.py   : data pre-processing
+  PrepareEDF.py   : data pre-processing \n
   JsonGetStage.py : gets stages from a Json staging file
   GetStages.py    : labels stages REM and NREM
   ClearStages.py  : gets all epochs of 30 seconds and labeling them as REM or NREM accordingly
