@@ -1,2 +1,4 @@
-# Bachelor Thesis : Analysis of Sleep Stageswith Support Vector Machine
+# Analysis of Sleep Stages with Support Vector Machine
+
+
  
